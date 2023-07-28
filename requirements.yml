@@ -1,4 +1,4 @@
 ---
 collections:
   - name: community.aws
-    version: 1.9.0
+    version: latest
