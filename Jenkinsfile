@@ -30,20 +30,21 @@ pipeline {
         }
         
         stage('Ansible Configuration') {
-            steps {
-                withCredentials([
-                    [
-                        $class: 'AmazonWebServicesCredentialsBinding',
-                        credentialsId: 'aws-credentials',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ]
-                ]) {
-                    sh 'ansible-galaxy install -r ansible/requirements.yml'
-                    ansiblePlaybook playbook: 'ansible/playbook.yml', inventory: 'ansible/ec2_public_ip.txt', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
-                }
+        steps {
+            withCredentials([
+                [
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-credentials', // Make sure this matches the ID
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]
+            ]) {
+                sh 'ansible-galaxy install -r ansible/requirements.yml'
+                ansiblePlaybook playbook: 'ansible/playbook.yml', inventory: 'ansible/ec2_public_ip.txt', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
             }
         }
+    }
+
         
         stage('Helm Deployment') {
             steps {
