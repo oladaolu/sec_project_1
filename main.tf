@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0c55b159cbfafe1f0" // Replace with the Ubuntu 18.04 LTS AMI ID for your region
+  ami           = "ami-0e7795f1741e57068" // Replace with the Ubuntu 18.04 LTS AMI ID for your region
   instance_type = "t2.large"
   tags = {
     Name = "MicroK8s-SonarQube-Instance"
