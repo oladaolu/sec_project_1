@@ -1,4 +1,4 @@
 variable "aws_region" {
-  description = "us-east-1"
+  description = "AWS region to launch the instance in"
   default     = "us-east-1"
 }
