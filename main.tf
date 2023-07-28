@@ -15,26 +15,27 @@ resource "aws_security_group" "instance_sg" {
   name_prefix = "Instance-SG-"
   
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-   }
+  }
+  
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1"  # Allow all protocols
     cidr_blocks = ["0.0.0.0/0"]
-  
-   }
+  }
 }
+
 
 output "ec2_public_ip" {
   value = aws_instance.ec2_instance.public_ip
