@@ -8,7 +8,7 @@ resource "aws_instance" "ec2_instance" {
   tags = {
     Name = "MicroK8s-SonarQube-Instance"
   }
-  security_groups = [aws_security_group.instance_sg.id]
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
 }
 
 resource "aws_security_group" "instance_sg" {
