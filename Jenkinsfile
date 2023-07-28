@@ -31,8 +31,14 @@ pipeline {
         
         stage('Ansible Configuration') {
             steps {
-                withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-                                 string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([
+                    [
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-credentials',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]
+                ]) {
                     sh 'ansible-galaxy install -r ansible/requirements.yml'
                     ansiblePlaybook playbook: 'ansible/playbook.yml', inventory: 'ansible/ec2_public_ip.txt', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
                 }
