@@ -2,21 +2,11 @@ provider "aws" {
   region = var.aws_region
 }
 
-variable "public_key" {
-  type    = string
-  default = ""
-}
-
-resource "aws_key_pair" "my_keypair" {
-  key_name = "my-keypair"
-  public_key = var.public_key
-}
-
 resource "aws_instance" "ec2_instance" {
   ami           = "ami-0e7cbec6664f10896" // Replace with the Ubuntu 18.04 LTS AMI ID for your region
   instance_type = "t2.large"
   user_data = file("${path.module}/app_install.sh")
-  key_name  = aws_key_pair.my_keypair.key_name
+  key_name  = "security_compass_key"
   tags = {
     Name = "MicroK8s-SonarQube-Instance"
   }
