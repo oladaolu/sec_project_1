@@ -2,3 +2,4 @@ all:
   hosts:
     my_instance:
       ansible_host: "44.204.40.186"
+      ansible_user: ubuntu
