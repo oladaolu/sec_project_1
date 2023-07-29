@@ -8,7 +8,7 @@ variable "public_key" {
 }
 
 resource "aws_key_pair" "my_keypair" {
-  key_name = "sec-keypair"
+  key_name = "my-keypair"
   public_key = var.public_key
 }
 
