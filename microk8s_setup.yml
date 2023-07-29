@@ -1,6 +1,6 @@
 ---
 - name: Install necessary packages and dependencies
-  hosts: your_instance
+  hosts: my_instance
   become: true
   tasks:
     - name: Update apt cache
@@ -42,7 +42,7 @@
       command: iptables -P FORWARD ACCEPT
 
 - name: Start and configure MicroK8s
-  hosts: your_instance
+  hosts: my_instance
   gather_facts: false
   tasks:
     - name: Start MicroK8s
@@ -69,7 +69,7 @@
     # Optional: You can add more tasks here to configure additional components if needed.
 
 - name: Save MicroK8s configuration
-  hosts: your_instance
+  hosts: my_instance
   gather_facts: false
   tasks:
     - name: Save MicroK8s configuration
