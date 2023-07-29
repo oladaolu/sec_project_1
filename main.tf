@@ -2,6 +2,11 @@ provider "aws" {
   region = var.aws_region
 }
 
+variable "public_key" {
+  type    = string
+  default = ""
+}
+
 resource "aws_key_pair" "my_keypair" {
   key_name = "my-keypair"
 }
