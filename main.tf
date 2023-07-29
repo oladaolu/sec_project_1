@@ -2,11 +2,21 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "tls_private_key" "key" {
+ algorithm = "RSA"
+ rsa_bits  = 4096
+}
+ 
+resource "aws_key_pair" "aws_key" {
+ key_name   = "sec-ssh-key"
+ public_key = tls_private_key.key.public_key_openssh
+}
+
 resource "aws_instance" "ec2_instance" {
   ami           = "ami-0e7cbec6664f10896" // Replace with the Ubuntu 18.04 LTS AMI ID for your region
   instance_type = "t2.large"
   user_data = file("${path.module}/app_install.sh")
-  key_name  = "my_sec_key"
+  key_name  = aws_key_pair.aws_key.key_name
   tags = {
     Name = "MicroK8s-SonarQube-Instance"
   }
