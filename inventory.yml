@@ -1,0 +1,4 @@
+all:
+  hosts:
+    my_instance:
+      ansible_host: your_ec2_instance_ip_or_dns
