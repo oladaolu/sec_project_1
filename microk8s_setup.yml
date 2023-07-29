@@ -1,0 +1,77 @@
+---
+- name: Install necessary packages and dependencies
+  hosts: your_instance
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - gnupg
+          - lsb-release
+
+    - name: Add MicroK8s repository key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add MicroK8s APT repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Install MicroK8s
+      apt:
+        name: microk8s
+        state: present
+
+    - name: Allow current user to use MicroK8s
+      command: usermod -a -G microk8s $USER
+
+    - name: Allow MicroK8s to use iptables
+      command: iptables -P FORWARD ACCEPT
+
+- name: Start and configure MicroK8s
+  hosts: your_instance
+  gather_facts: false
+  tasks:
+    - name: Start MicroK8s
+      become: false
+      command: microk8s.start
+
+    - name: Wait for MicroK8s to be ready
+      become: false
+      command: microk8s.kubectl get nodes
+      retries: 5
+      delay: 10
+      register: k8s_status
+      until: k8s_status.stdout_lines | length == 2
+
+    - name: Enable required MicroK8s addons
+      become: false
+      command: microk8s.enable {{ item }}
+      with_items:
+        - dns
+        - storage
+        - ingress
+        - dashboard
+
+    # Optional: You can add more tasks here to configure additional components if needed.
+
+- name: Save MicroK8s configuration
+  hosts: your_instance
+  gather_facts: false
+  tasks:
+    - name: Save MicroK8s configuration
+      become: false
+      command: microk8s.config > ~/.kube/config
