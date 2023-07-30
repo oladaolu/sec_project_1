@@ -7,12 +7,6 @@
       apt:
         update_cache: yes
 
-    - name: Check dpkg status
-      become: yes
-      shell: dpkg --configure -a
-      ignore_errors: yes
-      register: dpkg_status
-
     - name: Retry dpkg configuration
       become: yes
       shell: dpkg --configure -a
