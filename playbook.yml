@@ -1,41 +1,63 @@
-- name: Install necessary packages and dependencies
+---
+- name: Configure EC2 Instance and MicroK8s
   hosts: all
   become: true
+  vars:
+    microk8s_version: "1.22/stable"
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
+      become: true
 
     - name: Install required packages
       apt:
-        name: ['python3-pip']
+        name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
         state: present
+      become: true
 
-- name: Install MicroK8s
-  hosts: all
-  become: true
-  tasks:
-    - name: Install snapd
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      become: true
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+      become: true
+
+    - name: Install Docker
       apt:
-        name: snapd
+        name: docker-ce
         state: present
+      become: true
 
-    - name: Install MicroK8s via snap
-      command: snap install microk8s --classic --channel=1.20
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      become: true
 
-    - name: Add current user to MicroK8s group
-      command: usermod -a -G microk8s $USER
+    - name: Install MicroK8s
+      shell: |
+        snap install microk8s --classic --channel={{ microk8s_version }}
+        usermod -a -G microk8s ubuntu
+      become: true
+      environment:
+        HOME: /home/ubuntu
 
-    - name: Allow MicroK8s commands without sudo
-      command: sudo snap alias microk8s.kubectl kubectl
-      args:
-        creates: /usr/local/bin/kubectl
+    - name: Wait for MicroK8s to start
+      shell: microk8s.status --wait-ready
+      become: true
+      environment:
+        HOME: /home/ubuntu
 
-- name: Reboot the instance to apply changes
-  hosts: all
-  become: true
-  tasks:
-    - name: Reboot the instance
-      command: reboot
-      async: 0
-      poll: 0
+    - name: Enable MicroK8s addons
+      shell: microk8s.enable dns storage ingress
+      become: true
+      environment:
+        HOME: /home/ubuntu
+
