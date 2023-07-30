@@ -4,7 +4,35 @@
   vars:
     microk8s_version: "1.27"
   tasks:
-    # ... existing tasks to update apt cache, install Docker, etc ...
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3', 'python3-pip']
+        state: present
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
     - name: Install MicroK8s
       shell: |
@@ -23,11 +51,22 @@
       environment:
         HOME: /home/ubuntu
 
-    - name: Add kubectl alias and grant permissions for .kube directory
+    - name: Create .bash_aliases file if not exist
+      file:
+        path: /home/ubuntu/.bash_aliases
+        state: touch
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Add kubectl alias
       lineinfile:
         dest: /home/ubuntu/.bash_aliases
         line: "alias kubectl='microk8s kubectl'"
+        create: yes
+        owner: ubuntu
+        group: ubuntu
       become_user: ubuntu
+
 
 - name: Deploy SonarQube
   hosts: localhost
