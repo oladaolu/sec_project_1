@@ -13,7 +13,6 @@
         state: present
     
     - name: Check if MicroK8s is installed
-        become: true
         command: snap list | grep microk8s
         register: microk8s_check
         ignore_errors: yes
