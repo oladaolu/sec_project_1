@@ -1,5 +1,5 @@
 all:
   hosts:
     my_instance:
-      ansible_host: "44.212.18.27"
+      ansible_host: "44.203.170.242"
       ansible_user: ubuntu
