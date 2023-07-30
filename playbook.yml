@@ -74,17 +74,3 @@
       become_user: ubuntu
 
 
-- name: Deploy SonarQube
-  hosts: localhost
-  gather_facts: no
-  tasks:
-    - name: Install Helm
-      apt:
-        name: ['helm']
-        state: present
-
-    - name: Add SonarQube Helm repository
-      shell: helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
-
-    - name: Upgrade or Install SonarQube
-      shell: helm upgrade --install sonarqube sonarqube/sonarqube --set sonar.web.port=80 --set sonar.web.context=/ --set sonar.web.javaOpts="-Xmx512m -Xms128m -XX:+HeapDumpOnOutOfMemoryError" --set postgresql.postgresqlUsername=sonar --set postgresql.postgresqlPassword=sonar --set persistence.storageClass=standard --set ingress.enabled=true
