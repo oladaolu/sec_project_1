@@ -39,7 +39,7 @@ pipeline {
         stage('Ansible Configuration') {
             steps {
                 sh 'ansible-galaxy install -r requirements.yml'
-                ansiblePlaybook playbook: 'playbook.yml', inventory: 'ec2.py', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
+                ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.yml', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
             }
         }
 
