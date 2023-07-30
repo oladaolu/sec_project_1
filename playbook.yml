@@ -2,7 +2,7 @@
   hosts: all
   become: true
   vars:
-    microk8s_version: "1.22/stable"
+    microk8s_version: "1.27"
   tasks:
     - name: Update apt cache
       apt:
