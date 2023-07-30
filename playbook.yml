@@ -37,8 +37,7 @@
       shell: |
         snap install microk8s --classic --channel=1.27
         usermod -a -G microk8s ubuntu
-      environment:
-        HOME: /home/ubuntu
+        sudo chown -f -R ubuntu ~/.kube
 
     - name: Wait for MicroK8s to start
       shell: microk8s status --wait-ready
