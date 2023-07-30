@@ -7,11 +7,6 @@
       apt:
         update_cache: yes
 
-    - name: Retry dpkg configuration
-      become: yes
-      shell: dpkg --configure -a
-      when: dpkg_status.rc != 0
-
     - name: Install required packages
       apt:
         name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3', 'python3-pip']
