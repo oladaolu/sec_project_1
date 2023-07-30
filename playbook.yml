@@ -1,8 +1,7 @@
 - name: Configure EC2 Instance
   hosts: all
   become: true
-  vars:
-    microk8s_version: "1.27"
+  
   tasks:
     - name: Update apt cache
       apt:
@@ -36,7 +35,7 @@
 
     - name: Install MicroK8s
       shell: |
-        snap install microk8s --classic --channel={{ microk8s_version }}
+        snap install microk8s --classic --channel=1.27
         usermod -a -G microk8s ubuntu
       environment:
         HOME: /home/ubuntu
