@@ -19,6 +19,16 @@
         sudo chown -f -R ubuntu ~/.kube
       ignore_errors: yes
 
+    - name: Create Kubernetes config file
+      shell: microk8s config > ~/.kube/config
+      args:
+        executable: /bin/bash
+
+    - name: Set correct permissions for the config file
+      file:
+        path: /home/ubuntu/.kube/config
+        mode: '0600'
+
     - name: Wait for MicroK8s to start
       shell: microk8s status --wait-ready
 
