@@ -38,24 +38,30 @@ pipeline {
 
         stage('Ansible Configuration') {
             steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'My_SSH_Credentials', keyFileVariable: 'SSH_KEY')]) {
+                // sh "ssh -i /home/ubuntu/.ssh/security_compass_key.pem ubuntu@44.203.170.242"
+                // Wait for 30 seconds before running the Ansible playbook
+                // sleep 300
                 sh 'ansible-galaxy install -r requirements.yml'
-                ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.yml', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3'"
+                ansiblePlaybook playbook: 'playbook.yml', inventory: 'inventory.yml', colorized: true, extras: "-u ubuntu -e 'ansible_python_interpreter=/usr/bin/python3' --private-key=${SSH_KEY}"
+                }
             }
         }
 
         stage('Helm Deploy SonarQube') {
             steps {
-                sh 'helm repo add stable https://charts.helm.sh/stable'
+                sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
+                // sh 'helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube'
                 sh 'helm repo update'
-
-                sh 'helm install sonarqube stable/sonarqube --set sonar.web.port=80 --set sonar.web.context=/ --set sonar.web.javaOpts="-Xmx512m -Xms128m -XX:+HeapDumpOnOutOfMemoryError" --set postgresql.postgresqlUsername=sonar --set postgresql.postgresqlPassword=sonar --set persistence.storageClass=standard --set ingress.enabled=true'
+                // sh 'kubectl create namespace sonarqube'
+                sh 'helm upgrade --install my-sonarqube sonarqube/sonarqube --set sonar.web.port=80'
             }
         }
     }
 
-    post {
-        always {
-            sh 'terraform destroy -auto-approve'
-        }
-    }
+    // post {
+    //     always {
+    //         sh 'terraform destroy -auto-approve'
+    //     }
+    // }
 }
