@@ -27,8 +27,7 @@
     - name: Create Kubernetes config file
       become_user: ubuntu
       command: microk8s config > /home/ubuntu/.kube/config
-      creates: /home/ubuntu/.kube/config
-
+      
     
     - name: Set correct permissions for the config file
       become: yes
@@ -36,7 +35,7 @@
       file:
         path: /home/ubuntu/.kube/config
         mode: '0600'
-      notify: Restart microk8s
+      when: "'/home/ubuntu/.kube/config' is exists"
 
 
     - name: Wait for MicroK8s to start
@@ -64,13 +63,5 @@
         group: ubuntu
       become_user: ubuntu
 
-    # Add a handler to restart microk8s
-    - name: Restart microk8s
-      become: yes
-      become_user: ubuntu
-      shell: microk8s stop && microk8s start
-      async: 0
-      poll: 0
-      ignore_errors: true
-
+   
 
