@@ -67,13 +67,9 @@ This stage will use Helm to deploy SonarQube on the MicroK8s cluster. It will ad
 3. The provided Terraform configuration, Ansible playbook, and Helm chart are tested and working correctly.
 4. The specified AWS region (`us-east-1`) is appropriate for your deployment. If not, modify the `AWS_DEFAULT_REGION` in the Jenkinsfile accordingly.
 
-## Important Notes
-
-1. Ensure that you have taken the necessary security measures to protect sensitive information like AWS credentials and SSH keys.
-2. Test the pipeline in a controlled environment before deploying to production to avoid any unintended consequences.
 
 ## Conclusion
 
 Following the steps and pre-requisites mentioned in this README will enable you to set up an automated deployment pipeline using Jenkins, Terraform, Ansible, and Helm. This pipeline will provision an EC2 instance, configure MicroK8s, and deploy SonarQube on the MicroK8s cluster.
 
-Happy deploying!
+
