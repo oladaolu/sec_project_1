@@ -16,7 +16,7 @@
       shell: |
         snap install microk8s --classic --channel=1.27
         sudo usermod -a -G microk8s ubuntu
-        sudo chown -R ubuntu ~/.kube
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
 
     - name: Add 'ubuntu' user to 'microk8s' group
       user:
@@ -31,7 +31,7 @@
       file:
         path: /home/ubuntu/.kube
         state: directory
-        mode: '0755'
+        mode: '0700'
 
     - name: Create Kubernetes config file
       become_user: ubuntu
