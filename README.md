@@ -13,7 +13,7 @@ This README document provides step-by-step instructions on how to set up an auto
 ## Jenkins Pipeline Configuration
 
 1. Open your Jenkins web interface and create a new pipeline job.
-2. In the pipeline configuration, specify the Git repository URL where this project's Jenkinsfile is located (e.g., https://github.com/your_username/your_repo.git).
+2. In the pipeline configuration, specify the Git repository URL where this project's Jenkinsfile is located.
 3. Configure the credentials in Jenkins for AWS (`aws-credentials`) and the SSH key (`My_SSH_Credentials`) used for the EC2 instance.
 4. Save the pipeline configuration.
 
@@ -67,9 +67,13 @@ This stage will use Helm to deploy SonarQube on the MicroK8s cluster. It will ad
 3. The provided Terraform configuration, Ansible playbook, and Helm chart are tested and working correctly.
 4. The specified AWS region (`us-east-1`) is appropriate for your deployment. If not, modify the `AWS_DEFAULT_REGION` in the Jenkinsfile accordingly.
 
+## Important Notes
+
+1. Ensure that you have taken the necessary security measures to protect sensitive information like AWS credentials and SSH keys.
+2. Test the pipeline in a controlled environment before deploying to production to avoid any unintended consequences.
 
 ## Conclusion
 
 Following the steps and pre-requisites mentioned in this README will enable you to set up an automated deployment pipeline using Jenkins, Terraform, Ansible, and Helm. This pipeline will provision an EC2 instance, configure MicroK8s, and deploy SonarQube on the MicroK8s cluster.
 
-
+Happy deploying!
