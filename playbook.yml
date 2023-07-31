@@ -15,6 +15,8 @@
     - name: Install MicroK8s
       shell: |
         snap install microk8s --classic --channel=1.27
+        sudo usermod -a -G microk8s ubuntu
+        sudo chown -R ubuntu ~/.kube
               
     - name: Ensure ~/.kube directory exists
       become: yes
